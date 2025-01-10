@@ -1,0 +1,5 @@
+{
+	"Weapon" : [],
+	"Potion" : [["Heal Potion", 0, 3, 3, 15], ["Precision Potion", 2, 0.5, 2, 2], ["Strength Potion", 3, 5, 4, 3],
+		["Resistance Potion", 4, 5, 4, 3], ["Initiative Potion", 5, 5, 4, 3], ["Dexterity Potion", 6, 5, 4, 3]]
+}
