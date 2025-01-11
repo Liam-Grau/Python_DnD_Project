@@ -1,4 +1,5 @@
 import numpy as np
+import random
 from src.Color import *
 import json
 
@@ -7,7 +8,7 @@ class TileType(Enum):
     NONE = 0
     ENEMY = 1
     ITEM = 2
-    PLAYER = 3
+    TREASURE = 3
 
 
 class Tile:
@@ -15,10 +16,19 @@ class Tile:
     def __init__(self, tile_type=TileType.NONE, discovered=False):
         self.tile_type = tile_type
         self.discovered = discovered
+        self.player = False
 
-    def update(self):
+    def update(self, mob_spawn_chance, item_spawn_chance):
         if (self.discovered and self.tile_type == TileType.NONE and np.random.uniform(low=0.0, high=1.0, size=1) < 0.1):
             self.discovered = False
+
+            num = random.uniform(0.0, 1.0)
+            if (num > self.item_spawn_chance):
+                self.tile_type = TileType.NONE
+            elif (num > self.mob_spawn_chance):
+                self.tile_type = TileType.ITEM
+            else:
+                self.tile_type = TileType.ENEMY
 
         return not self.discovered
 
@@ -54,8 +64,10 @@ class Map:
                     result += colored_str(' 0')
                 elif (tile.tile_type == TileType.ITEM):
                     result += colored_str(' I', Color.GREEN)
-                else:
+                elif tile.tile_type == TileType.ENEMY:
                     result += colored_str(' M', Color.RED)
+                else:
+                    result += colored_str(' T', Color.YELLOW)
 
             result += '\n'
 
@@ -63,12 +75,11 @@ class Map:
 
     def update(self, player_pos):
         cur_tile = self.map[int(player_pos[0])][int(player_pos[1])]
-        cur_tile.tile_type = TileType.NONE
         cur_tile.discovered = True
         reset_tile = set()
 
         for tile in self.discovered_tiles:
-            if(tile.update()):
+            if(tile.update(self.mob_spawn_chance, self.item_spawn_chance)):
                 reset_tile.add(tile)
         self.discovered_tiles -= reset_tile
         self.discovered_tiles.add(cur_tile)
@@ -78,7 +89,7 @@ class Map:
 
         for row in self.map:
             for tile in row:
-                if tile.tile_type == TileType.PLAYER:
+                if tile.player:
                     result += ' ' + colored_str("\u263A", Color.PURPLE)
                 elif not tile.discovered:
                     result += ' ' + u"\u25A1"
@@ -96,3 +107,14 @@ class Map:
 
     def set_tile_type(self, pos, tile_type: TileType = TileType.NONE):
         self.map[int(pos[0])][int(pos[1])].tile_type = tile_type
+
+    def player_on_tile(self, pos, var = True):
+        self.map[int(pos[0])][int(pos[1])].player = var
+
+    def set_treasure_tile(self, player_pos):
+        pos = player_pos
+
+        while pos[0] == player_pos[0] and pos[1] == player_pos[1]:
+            pos = np.random.randint(low=0, high=self.dimension[1], size=(2,))
+
+        self.set_tile_type(pos, TileType.TREASURE)

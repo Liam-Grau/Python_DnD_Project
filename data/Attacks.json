@@ -1,9 +1,9 @@
 {
-	"Character" : [["Punch", 5, 10, 40, 96], ["Kick", 6, 5, 40, 96]],
-	"Player" : [["Escape", -1, 5, 100, 1000]],
-	"Enemy" : [["Bite", 4, 15, 20, 90], ["heal", -2, 5, 40, 95]],
-	"Sword" : [["Slice", 8, 5, 65, 96], ["Pierce", 8, 15, 55, 96]],
-	"Shield" : [["Bonk", 6, 2, 70, 98], ["Dash", 7, 2, 70, 96]],
-	"Spear" : [["Mid Range Attack", 8, 5, 55, 91], ["Precise Attack", 7, 10, 55, 91]],
-	"Hammer" : [["Hammer hit", 9, 5, 50, 96], ["Skull Breaker", 10, 5, 55, 96]]
+	"CHARACTER" : [["Punch", 5, 10, 40, 95], ["Kick", 6, 5, 40, 95]],
+	"PLAYER" : [["Escape", -1, 0, 50, 100]],
+	"ENEMY" : [["Bite", 4, 15, 20, 90]],
+	"SWORD" : [["Slice", 8, 5, 65, 95], ["Pierce", 8, 15, 55, 95]],
+	"SHIELD" : [["Bonk", 6, 2, 70, 97], ["Dash", 7, 2, 70, 96]],
+	"SPEAR" : [["Mid Range Attack", 8, 5, 55, 90], ["Precise Attack", 7, 10, 55, 90]],
+	"HAMMER" : [["Hammer hit", 9, 5, 50, 95], ["Skull Breaker", 10, 5, 55, 95]]
 }

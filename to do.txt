@@ -1,0 +1,12 @@
+to do:
+	- Game (possibiliter de continuer de jouer en cas de victoire ou de recommencer en cas de défaite)
+	- Map (add biome for tile with background color generated with markove chains)
+	- Weapon (json file et adapt each function)
+	- Save (3 slots json file !!)
+	- Enemy (json file for all different enemeis for each biom)
+__________________________________________________________________________________________________
+	- Game (add possibility of load specific json to load map)
+	- Player (add money system)
+	- Tile (add specific tiles [taverne, marchand, campement])
+	- Player (add reputation system and charism stat)
+	- Player (add armor slots [jamais])

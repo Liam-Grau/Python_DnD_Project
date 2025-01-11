@@ -20,17 +20,34 @@ class Character:
             nb_point -= self.initiative
             self.dexterity = random.randint(0, min(max_nb_point // 2,  nb_point))
 
-            self.max_life = self.level * (self.resistance + self.initiative) * 0.5
-            self.life = self.max_life
-            self.crt_multi = 1 + (self.dexterity + self.strength) * 0.1
-
         else:
-            self.strength = 0
-            self.resistance = 0
-            self.initiative = 0
-            self.dexterity = 0
+            nb_point = 2 * max_point
+            print("C'est le moment de repartir tes points de maitrise, tu en as " +
+                  str(nb_point) + " de disponible.")
+            test = True
 
-            self.attribute_statistics(nb_point)
+            while (test):
+                print("Tu as encore " + str(nb_point) + " points a depenser.")
+                self.strength = abs(int(input("Nombre de point dans strength : ")))
+                print("Tu as encore " + str(nb_point - self.strength) + " points a depenser.")
+                self.resistance = abs(int(input("Nombre de point dans resistance : ")))
+                print("Tu as encore " + str(nb_point - self.strength -
+                      self.resistance) + " points a depenser.")
+                self.initiative = abs(int(input("Nombre de point dans initiative : ")))
+                print("Tu as encore " + str(nb_point - self.strength -
+                      self.resistance - self.initiative) + " points a depenser.")
+                self.dexterity = abs(int(input("Nombre de point dans dexterity : ")))
+
+                if (self.strength + self.resistance + self.initiative + self.dexterity <= nb_point):
+                    print("Personnage cree!")
+                    test = False
+
+                else:
+                    print("Tricheur!")
+
+        self.max_life = self.level * (self.resistance + self.initiative) * 0.5
+        self.life = self.max_life
+        self.crt_multi = 1 + (self.dexterity + self.strength) * 0.1
 
         self.weapon = None
         self.attacks = []
@@ -40,51 +57,6 @@ class Character:
 
     def __repr__(self):
         return "Character: " + self.__str__()
-
-    def attribute_statistics(self, nb_point):
-            print("C'est le moment de repartir tes points de maitrise, tu en as " +
-                  str(nb_point) + " de disponible.")
-            test = True
-            max_nb_point = nb_point
-
-            while (test):
-                print("Tu as encore " + str(nb_point) + " points a depenser.")
-                strength = abs(int(input("Nombre de point dans strength (augmente ton attaque et tes dégâts critiques) : ")))
-                self.strength += strength
-                nb_point -= strength
-                
-                print("Tu as encore " + str(nb_point - self.strength) + " points a depenser.")
-                resistance = abs(int(input("Nombre de point dans resistance (diminue tes dégâts subits et augmente ta vie) : ")))
-                self.resistance += resistance
-                nb_point -= resistance
-                
-                print("Tu as encore " + str(nb_point) + " points a depenser.")
-                initiative = abs(int(input("Nombre de point dans initiative (augmente tes chances de commencer un combat et ta vie) : ")))
-                self.initiative += initiative
-                nb_point -= initiative
-                
-                print("Tu as encore " + str(nb_point) + " points a depenser.")
-                dexterity = abs(int(input("Nombre de point dans dexterity (augmente tes chances d'esquive et tes dégâts critiques) : ")))
-                self.dexterity += dexterity
-                nb_point -= dexterity
-
-                if (nb_point < 0):
-                    print("Tricheur!")
-                    print("On recommence")
-                    nb_point = max_nb_point
-
-                elif nb_point > 0:
-                    test = not bool(int(input("Il te reste des points, veux tu malgré tout finaliser la création de ton personnage (oui = 1, non = 0) : ")))
-                    max_nb_point = nb_point
-
-                else:
-                    print("Personnage cree!")
-                    test = False
-                    
-
-            self.max_life = self.level * (self.resistance + self.initiative) * 0.5
-            self.life = self.max_life
-            self.crt_multi = 1 + (self.dexterity + self.strength) * 0.1
 
     def set_weapon(self, weapon):
         self.weapon = weapon
@@ -133,7 +105,7 @@ class Character:
 
         if roll > attack.failure:
             print_colored("Echec critique !", Color.RED)
-            damage = max((attack.damage + self.strength + weapon_damage) * self.crt_multi - self.resistance, 0)
+            damage = (attack.damage + self.strength + weapon_damage) * self.crt_multi - self.resistance
             print('\n' + self.name + " s'inflige " + str(damage) + " points de dégat !\n")
             self.life -= damage
         elif roll > attack.success:
@@ -143,13 +115,13 @@ class Character:
             print_colored("Réussite.", Color.GREEN)
             if (other_character.dodge(self)):
                 return
-            damage = max(attack.damage + self.strength + weapon_damage - other_character.resistance, 0)
+            damage = attack.damage + self.strength + weapon_damage - other_character.resistance
             print('\n' + self.name + " inflige " + str(damage) + " points de dégat à " + other_character.name + " !\n")
             other_character.life -= damage
         else:
             print_colored("Réussite Critique !", Color.YELLOW)
             if (other_character.dodge(self, True)):
                 return
-            damage = max((attack.damage + self.strength + weapon_damage) * self.crt_multi - other_character.resistance, 0)
+            damage = (attack.damage + self.strength + weapon_damage) * self.crt_multi - other_character.resistance
             print('\n' + self.name + " inflige " + str(damage) + " points de dégat à " + other_character.name + " !\n")
             other_character.life -= damage

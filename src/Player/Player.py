@@ -1,5 +1,4 @@
 from src.Character import *
-from src.Item import *
 
 
 class Player(Character):
@@ -7,7 +6,7 @@ class Player(Character):
     def __init__(self, name, level=1, random=True, nb_point=19):
         super(Player, self).__init__(name, level, random, nb_point)
         self.xp = 0
-        self.max_xp = 10
+        self.max_xp = 100
         self.pos = [0, 0]
         self.inventory = []
         self.quantity = []
@@ -26,7 +25,6 @@ class Player(Character):
     def choose_attack(self, prohibited_attacks=[]):
         attack_pool = [attack for attack in self.attacks if attack not in prohibited_attacks]
         self.draw_life()
-        self.draw_xp()
     
         choice = bool(int(input("\nVeux tu prendre une potion (cela ne passera pas ton tour) (oui = 1, non = 0) : ")))
 
@@ -82,49 +80,33 @@ class Player(Character):
         print("\nExpérience : " + str(self.xp) + " / " + str(self.max_xp) + '\n')
     
     def level_up(self):
-        if (self.xp > self.max_xp):
-            nb_point = 2 * self.xp // self.max_xp
-            self.level += nb_point // 2
-            self.xp %= self.max_xp
-            self.life = self.max_life
-            self.draw_life()
-            self.draw_xp()
+        self.draw_xp()
 
-            self.attribute_statistics(nb_point)
-            
+        if (self.xp > self.max_xp):
+            self.level += self.xp // self.max_xp
+            self.xp %= self.max_xp
 
     def apply_potion_effect(self, index_potion):
         if (index_potion < 0 or index_potion > len(self.inventory) - 1):
             return False
 
         potion = self.inventory[index_potion]
-        self.quantity[index_potion] -= 1
-        if  (self.quantity[index_potion] == 0):
-            del self.quantity[index_potion]
-            del self.inventory[index_potion]
-            
         print(potion.name + " Potion utilisée.")
 
         self.potion_effect += [[potion.stat, potion.duration, potion.efficiency, potion.name]]
 
-        if (potion.stat == StatType.LIFE):
+        if (potion.stat == 0):
             self.life = min(self.max_life, self.life + potion.efficiency)
-            print("Tu as été soigné de " + str(potion.efficiency) + " pv.")
-        elif (potion.stat == StatType.CRT_MULTI):
+        elif (potion.stat == 2):
             self.crt_multi += potion.efficiency
-            print("Ton multiplicateur critique a été augmenter de " + str(potion.efficiency) + ". Ta stat est maintenant égale à " + str(self.crt_multi) + '.')
-        elif (potion.stat == StatType.STRENGTH):
+        elif (potion.stat == 3):
             self.strength += potion.efficiency
-            print("Ta force a été augmenter de " + str(potion.efficiency) + ". Ta stat est maintenant égale à " + str(self.strength) + '.')
-        elif (potion.stat == StatType.RESISTANCE):
+        elif (potion.stat == 4):
             self.resistance += potion.efficiency
-            print("Ta résistance a été augmenter de " + str(potion.efficiency) + ". Ta stat est maintenant égale à " + str(self.resistance) + '.')
-        elif (potion.stat == StatType.INITIATIVE):
+        elif (potion.stat == 5):
             self.initiative += potion.efficiency
-            print("Ton initiative a été augmenter de " + str(potion.efficiency) + ". Ta stat est maintenant égale à " + str(self.initiative) + '.')
-        elif (potion.stat == StatType.DEXTERITY):
+        elif (potion.stat == 6):
             self.dexterity += potion.efficiency
-            print("Ta dextérité a été augmenter de " + str(potion.efficiency) + ". Ta stat est maintenant égale à " + str(self.dexterity) + '.')
 
         return True
             
@@ -133,31 +115,10 @@ class Player(Character):
         expire_effect = []
         
         for effect in self.potion_effect:
-            effect[1] -= 1
-            
-            if effect[0] == StatType.LIFE and effect[1] > 0:
-                self.life = min(self.max_life, self.life + effect[2])
-                print("Tu as été soigné de " + str(effect[2]) + " pv.")
+            if effect[0] == 0:
+                self.life = min(self.max_life, self.life + potion.efficiency)
 
+            effect[1] -= 1
             if (effect[1] == 0):
                 expire_effect += [effect]
-                if (effect[0] == StatType.LIFE):
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Tu ne seras plus soigné.")
-                if (effect[0] == StatType.CRT_MULTI):
-                    self.crt_multi -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (multiplicateur critique = " + self.crt_multi + ").")
-                elif (effect[0] == StatType.STRENGTH):
-                    self.strength -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (force = " + self.strength + ").")
-                elif (effect[0] == StatType.RESISTANCE):
-                    self.resistance -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (résistance = " + self.resistance + ").")
-                elif (effect[0] == StatType.INITIATIVE):
-                    self.initiative -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (initiative = " + self.initiative + ").")
-                elif (effect[0] == StatType.DEXTERITY):
-                    self.dexterity -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (dextérité = " + self.dexterity + ").")
-
-        self.potion_effect = [effect for effect in self.potion_effect if effect not in expire_effect]
-        
+        # to do
