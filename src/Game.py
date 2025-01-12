@@ -303,7 +303,7 @@ class Game:
                 elif (key.lower() == 's'):
                     self.player.pos[0] += 1
 
-                    if (self.player.pos[0] > self.map.dimension[1] - 1):
+                    if (self.player.pos[0] > self.map.dimension[0] - 1):
                         self.player.pos[0] = 0
 
                 self.end = self.check_tile()
