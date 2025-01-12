@@ -49,11 +49,41 @@ class Map:
         self.item_spawn_chance = item_spawn_chance
         self.nothing_spawn_chance = nothing_spawn_chance
 
-        random_map = np.random.uniform(
-            low=0.0, high=mob_spawn_chance + item_spawn_chance + nothing_spawn_chance, size=(dimension[0], dimension[1]))
-        self.map = list(map(lambda row: list(map(self.choose_tile_tipe, row)), random_map))
+        self.map = []
 
         self.discovered_tiles = set()
+
+    def initialize_map(self):
+         random_map = np.random.uniform(low=0.0, high=self.mob_spawn_chance + self.item_spawn_chance + self.nothing_spawn_chance, size=(self.dimension[0], self.dimension[1]))
+         self.map = list(map(lambda row: list(map(self.choose_tile_tipe, row)), random_map))
+
+    def s_width(self, width):
+
+        try:
+            value = int(width)
+        except ValueError:
+            return False
+
+        if value < 2:
+            return False
+
+        self.dimension = [value, self.dimension[1]]
+        return True
+
+    def s_height(self, height):
+
+        try:
+            value = int(height)
+        except ValueError:
+            return False
+
+        value = int(height)
+        
+        if value < 2:
+            return
+
+        self.dimension = [self.dimension[0], value]
+        return True
 
     def __str__(self):
         result = "Current map :\n"
@@ -115,6 +145,6 @@ class Map:
         pos = player_pos
 
         while pos[0] == player_pos[0] and pos[1] == player_pos[1]:
-            pos = np.random.randint(low=0, high=self.dimension[1], size=(2,))
+            pos = [random.randint(0, self.dimension[0] - 1), random.randint(0, self.dimension[1] - 1)]
 
         self.set_tile_type(pos, TileType.TREASURE)

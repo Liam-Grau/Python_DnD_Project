@@ -3,9 +3,12 @@ from enum import Enum
 
 class Color(Enum):
     RED = '\033[31m'
+    LIGHT_RED = '\033[1;31m'
     GREEN = '\033[32m'
+    LIGHT_GREEN = '\033[92m'
     YELLOW = '\033[33m'
     BLUE = '\033[34m'
+    LIGHT_BLUE = '\033[94m'
     BLACK = '\033[30m'
     WHITE = '\033[97m'
     GRAY = '\033[90m'

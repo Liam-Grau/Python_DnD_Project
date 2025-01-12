@@ -1,0 +1,197 @@
+[
+  {
+    "dialogue_name": "presentation_dialogue",
+    "dialogue_lines": [
+      {
+        "line": "Bienvenue noble aventurier dans \"Dragon et Donjon\" !",
+        "time": 1.5,
+        "answers": []
+      },
+      {
+        "line": "Je suis le maitre du jeu, pour te servir.",
+        "time": 1.0,
+        "answers": []
+      },
+      {
+        "line": "Avant de te lancer au coeur d'une nouvelle histoire, construisons ton monde...",
+        "time": 2.0,
+        "answers": []
+      },
+      {
+        "line": "Donne moi la largeur de ton futur monde:",
+        "time": 2.0,
+        "answers": [
+          {
+            "type": 0
+          },
+          {
+            "function": "s_world_width"
+          }
+        ]
+      },
+      {
+        "line": "Donne moi maintenant sa longueur:",
+        "time": 1.0,
+        "answers": [
+          {
+            "type": 0
+          },
+          {
+            "function": "s_world_length"
+          }
+        ]
+      },
+      {
+        "line": "Etre cherchant tresors et aventures, donne moi ton nom:",
+        "time": 1.5,
+        "answers": [
+          {
+            "type": 0
+          },
+          {
+            "function": "s_player_name"
+          }
+        ]
+      },
+      {
+        "line": "Souhaites tu choisir tes statistiques ou laisseras tu l'univers le decider pour toi ?",
+        "time": 2.0,
+        "answers": [
+          {
+            "type": 1
+          },
+          {
+            "answer": "Laissez moi choisir, oh grand maitre du jeu !",
+            "function": "choose_stats"
+          },
+          {
+            "answer": "Voyons ce que ce monde me reserve...",
+            "function": "rand_stats"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "dialogue_name": "point_repartition_dialogue",
+    "dialogue_lines": [
+      {
+        "line": "C'est le moment de repartir tes points de maitrise, tu en as {self.player.nb_point}",
+        "time": 1.5,
+        "answers": []
+      },
+      {
+        "line": "De la force [{self.player.strength}] ! Voila ce qu'il te faut en premier !\n (Augmente ton attaque et tes degats critiques)",
+        "time": 1.0,
+        "answers": [
+          {
+            "type": 0
+          },
+          {
+            "function": "s_strength"
+          }
+        ]
+      },
+      {
+        "line": "Maintenant de la resistance [{self.player.resistance}], il te reste {self.player.nb_point} point(s).\n (Diminue tes degats subits et augmente ta vie)",
+        "time": 1.0,
+        "answers": [
+          {
+            "type": 0
+          },
+          {
+            "function": "s_resistance"
+          }
+        ]
+      },
+      {
+        "line": "Passons a l'initiative [{self.player.initiative}], tu peux encore utiliser {self.player.nb_point} point(s).\n (Augmente ta vie et tes chance de commencer un combat)",
+        "time": 1.0,
+        "answers": [
+          {
+            "type": 0
+          },
+          {
+            "function": "s_initiative"
+          }
+        ]
+      },
+      {
+        "line": "Il te reste la dexterite [{self.player.dexterity}] et seulement {self.player.nb_point} point(s).\n (Augmente tes chances d'esquives et de degats critiques')",
+        "time": 1.0,
+        "answers": [
+          {
+            "type": 0
+          },
+          {
+            "function": "s_dexterity"
+          }
+        ]
+      },
+      {
+        "line": "Il te reste {self.player.nb_point} point(s) souhaites-tu refaire un tour ?",
+        "time": 1.5,
+        "answers": [
+          {
+            "type": 1
+          },
+          {
+            "answer": "Oui pourquoi pas.",
+            "function": "choose_stats"
+          },
+          {
+            "answer": "Non continuons !",
+            "function": "continue_dialogue"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "dialogue_name": "final_dialogue",
+    "dialogue_lines": [
+      {
+        "line": "Bien... Tres bien... te voila donc,\n {self.player}",
+        "time": 1.0,
+        "answers": []
+      },
+      {
+        "line": "Avant de commencer, es tu sur de vouloir te lancer dans une tel aventure ?",
+        "time": 2.0,
+        "answers": [
+          {
+            "type": 1
+          },
+          {
+            "answer": "Oui ! Je n'ai pas peur du danger !",
+            "function": "start"
+          },
+          {
+            "answer": "Finalement... je vais arreter ici...",
+            "function": "leave"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "dialogue_name": "play_dialogue",
+    "dialogue_lines": [
+      {
+        "line": "Dans ce cas, va, aventurier, massacrer dragons et piller dongeons !",
+        "time": 1.5,
+        "answers": []
+      }
+    ]
+  },
+  {
+    "dialogue_name": "stop_dialogue",
+    "dialogue_lines": [
+      {
+        "line": "Il arrive d'avoir peur de son destin, dans ce cas j'espere que nous nous reverrons un jour, aventurier...",
+        "time": 2.0,
+        "answers": []
+      }
+    ]
+  }
+]

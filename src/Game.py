@@ -1,3 +1,4 @@
+from numpy import place
 from src.Player import *
 from src.Enemy import *
 from src.Map import *
@@ -6,6 +7,7 @@ import keyboard as kb
 from time import sleep
 from functools import reduce
 import sys
+from src.DialogueEngine import *
 
 
 class Game:
@@ -19,28 +21,41 @@ class Game:
         self.dict_attacks = {key: [Attack(x[0], x[1], x[2], x[3], x[4])
                                    for x in value] for key, value in attacks}
 
-        print('Bien venu noble aventurier dans "Dragon et Donjon"!\n')
-        map_dimension = [0, 0]
-        map_dimension[0] = int(input('Quelle devrait être la largeur du monde : '))
-        map_dimension[1] = int(input('Et pour la longueur : '))
-        name = colored_str(
-            input('Etre cherchant trésors et avantures, donne moi ton nom : '), Color.GREEN)
-        random_skill = bool(
-            int(input("Veux tu choisir tes statistiques (0) ou laisseras tu l'univers décider (1): ")))
-        self.player = Player(name, 1, random_skill)
+        self.map = Map()
+        self.player = Player()
         self.player.add_attacks(self.dict_attacks["CHARACTER"] + self.dict_attacks["PLAYER"])
-        print("Oh, je vois tu es donc : " + str(self.player))
 
-        self.map = Map(map_dimension)
         self.end = False
 
+        self.dialogue_engine = DialogueEngine()
+        self.dialogue_engine.load_dialogues("data/Introduction_Dialogue.json")
+
+        # Sets functions callbacks for dialogue system
+        funcs = { "s_world_width" : self.map.s_width,
+		  "s_world_length" : self.map.s_height,
+		  "s_player_name" : self.player.s_name,
+		  "choose_stats" : self.player.choose_stats,
+		  "rand_stats" : self.player.random_stats,
+		  "s_strength" : self.player.s_strength,
+		  "s_resistance" : self.player.s_resistance,
+		  "s_initiative" : self.player.s_initiative,
+		  "s_dexterity" : self.player.s_dexterity,
+		  "start" : self.dialogue_engine.start,
+		  "leave" : self.leave,
+		  "continue_dialogue" : self.player.continue_dialogue
+        }
+
+        self.dialogue_engine.set_mapped_functions(funcs)
+        self.dialogue_engine.start_new_dialogue("presentation_dialogue", self.player, Character("Maitre du jeu"))
+
+        self.map.initialize_map()
+
     def begin_game(self):
-        random_pos = np.random.randint(low=0, high=self.map.dimension[1], size=(2,))
+        random_pos = [random.randint(0, self.map.dimension[0] - 1), random.randint(0, self.map.dimension[1] - 1)]
         self.map.set_treasure_tile(random_pos)
         self.map.set_tile_type(random_pos)
         self.map.player_on_tile(random_pos)
         self.player.set_pos(random_pos)
-        print(self.map)
 
     def spawn_item(self):
         list_potions = self.dict_items["Potion"]
@@ -203,12 +218,13 @@ class Game:
             self.player.xp += 100
             self.map.set_tile_type(self.player.pos)
             self.map.set_treasure_tile(self.player.pos)
-            print(self.map)
             return not bool(int(input("Tu as maintenant un choix crucial à faire, veux tu teminer ton aventure ici et rentrer chez toi en héro avec le trésor (0) ou bien préfères tu la posser toujours plus loin tes limites et chercher les autres trésors qui se cache dans cette contré (1) : ")))
 
     def game_round(self):
         refresh_map = True
         
+        key = 0
+
         while(not self.end):
             if (refresh_map):
                 self.map.player_on_tile(self.player.pos)
@@ -251,8 +267,11 @@ class Game:
 
             elif (key.lower() == 'q'):
                 self.end = True
+        
+        if key == 0:
+            return
 
-        if key.lower() == 'q':
+        elif key.lower() == 'q':
             print("\nA la revoyure. En espérant que tu ais apprécié !")
             
         elif self.player.life > 0:
@@ -265,3 +284,9 @@ class Game:
                 self.__init__()
                 self.begin_game()
                 self.game_round()
+
+
+    # Simple function callback
+    def leave(self, dialogue_engine, result):
+        self.dialogue_engine.start_dialogue("stop_dialogue")
+        self.end = True

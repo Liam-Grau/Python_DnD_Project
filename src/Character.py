@@ -1,39 +1,109 @@
+from msilib.schema import _Validation_records
 import random
 from abc import ABC, abstractmethod
+from turtle import st
 from src.Attack import *
 from src.Color import *
 
 
 class Character:
-    def __init__(self, name, level=1, r=True, nb_point=19):
+    def __init__(self, name = "?????", level=1, r=True, nb_point=19):
         self.name = name
         self.level = level
-        nb_point += level
-        max_nb_point = nb_point  
+        self.nb_point = nb_point
+        self.nb_point += level
+
+        self.max_life = 1
+        self.life = 1
+        self.crt_multi = 1
+
+        self.strength = 0
+        self.resistance = 0
+        self.initiative = 0
+        self.dexterity = 0
 
         if r:
-            self.strength = random.randint(0, min(max_nb_point // 2,  nb_point))
-            nb_point -= self.strength
-            self.resistance = random.randint(0, min(max_nb_point // 2,  nb_point))
-            nb_point -= self.resistance
-            self.initiative = random.randint(0, min(max_nb_point // 2,  nb_point))
-            nb_point -= self.initiative
-            self.dexterity = random.randint(0, min(max_nb_point // 2,  nb_point))
-
-            self.max_life = self.level * (self.resistance + self.initiative) * 0.5
-            self.life = self.max_life
-            self.crt_multi = 1 + (self.dexterity + self.strength) * 0.1
-
-        else:
-            self.strength = 0
-            self.resistance = 0
-            self.initiative = 0
-            self.dexterity = 0
-
-            self.attribute_statistics(nb_point)
+            self.randomize_attributes()
 
         self.weapon = None
         self.attacks = []
+        self.calculate_stats()
+
+    def randomize_attributes(self):
+         max_nb_point = self.nb_point
+
+         self.strength = random.randint(0, min(max_nb_point // 2,  self.nb_point))
+         self.nb_point -= self.strength
+         self.nb_point -= self.resistance
+         self.resistance = random.randint(0, min(max_nb_point // 2,  self.nb_point))
+         self.initiative = random.randint(0, min(max_nb_point // 2,  self.nb_point))
+         self.nb_point -= self.initiative
+         self.dexterity = random.randint(0, min(max_nb_point // 2,  self.nb_point))
+
+    def calculate_stats(self):
+        self.max_life = self.level * (self.resistance + self.initiative) * 0.5 + 1
+        self.life = self.max_life
+        self.crt_multi = 1 + (self.dexterity + self.strength) * 0.1
+
+    def s_name(self, name):
+        self.name = colored_str(name, Color.GREEN)
+        return True
+
+    def s_strength(self, strength):
+
+        try:
+            value = int(strength)
+        except ValueError:
+            return False
+
+        if self.nb_point >= 0 and value <= self.nb_point:
+            self.strength += value
+            self.nb_point -= value
+            return True
+
+        return False
+
+    def s_resistance(self, resistance):
+
+        try:
+            value = int(resistance)
+        except ValueError:
+            return False
+
+        if self.nb_point >= 0 and value <= self.nb_point:
+            self.resistance += value
+            self.nb_point -= value
+            return True
+
+        return False
+
+    def s_initiative(self, initiative):
+
+        try:
+            value = int(initiative)
+        except ValueError:
+            return False
+
+        if self.nb_point >= 0 and value <= self.nb_point:
+            self.initiative += value
+            self.nb_point -= value
+            return True
+
+        return False
+
+    def s_dexterity(self, dexterity):
+
+        try:
+            value = int(dexterity)
+        except ValueError:
+            return False
+
+        if self.nb_point >= 0 and value <= self.nb_point:
+            self.dexterity += value
+            self.nb_point -= value
+            return True
+
+        return False
 
     def __str__(self):
         return "[Name : " + self.name + ", Level : " + str(self.level) + ", Strength : " + str(self.strength) + ", Resistance : " + str(self.resistance) + ", Initiative : " + str(self.initiative) + ", Dexterity : " + str(self.dexterity) + ", Life : " + str(self.life) + " / " + str(self.max_life) + ", Critical Multiplicator : " + str(self.crt_multi) + ']'

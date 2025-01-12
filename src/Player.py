@@ -1,10 +1,10 @@
 from src.Character import *
 from src.Item import *
-
+from src.DialogueEngine import *
 
 class Player(Character):
 
-    def __init__(self, name, level=1, random=True, nb_point=19):
+    def __init__(self, name="?????", level=1, random=False, nb_point=19):
         super(Player, self).__init__(name, level, random, nb_point)
         self.xp = 0
         self.max_xp = 100
@@ -23,6 +23,18 @@ class Player(Character):
 
         return opponents[choice]
     
+    def choose_stats(self, dialogue_engine, value):
+        dialogue_engine.start_dialogue("point_repartition_dialogue")
+
+    def random_stats(self, dialogue_engine, value):
+        dialogue_engine.start_dialogue("final_dialogue")
+        self.randomize_attributes()
+        self.calculate_stats()
+
+    def continue_dialogue(self, dialogue_engine, value):
+        dialogue_engine.start_dialogue("final_dialogue")
+        self.calculate_stats()
+
     def choose_attack(self, prohibited_attacks=[]):
         attack_pool = [attack for attack in self.attacks if attack not in prohibited_attacks]
         self.draw_life()
