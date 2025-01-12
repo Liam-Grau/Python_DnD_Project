@@ -34,11 +34,12 @@ class Character:
 
          self.strength = random.randint(0, min(max_nb_point // 2,  self.nb_point))
          self.nb_point -= self.strength
-         self.nb_point -= self.resistance
          self.resistance = random.randint(0, min(max_nb_point // 2,  self.nb_point))
+         self.nb_point -= self.resistance
          self.initiative = random.randint(0, min(max_nb_point // 2,  self.nb_point))
          self.nb_point -= self.initiative
          self.dexterity = random.randint(0, min(max_nb_point // 2,  self.nb_point))
+         self.nb_point -= self.dexterity
 
     def calculate_stats(self):
         self.max_life = self.level * (self.resistance + self.initiative) * 0.5 + 1
