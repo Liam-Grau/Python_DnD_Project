@@ -199,7 +199,7 @@ class Character:
         print('\n' + self.name + " utilise " + attack.name + " sur " + other_character.name + " : " + str(roll) + " / 100")
 
         if (self.weapon):
-            weapon_damage = weapon.damage
+            weapon_damage = self.weapon.damage
 
         if roll > attack.failure:
             print_colored("Echec critique !", Color.RED)

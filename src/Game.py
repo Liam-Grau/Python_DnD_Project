@@ -3,6 +3,7 @@ from src.Player import *
 from src.Enemy import *
 from src.Map import *
 from src.Item import *
+from src.Weapon import *
 import keyboard as kb
 from time import sleep
 from functools import reduce
@@ -12,15 +13,17 @@ from src.DialogueEngine import *
 
 class Game:
 
-    def __init__(self):
-        items = list(json.loads(open('data/Items.json').read()).items())
-        self.dict_items = {key: [Item(x[0], x[1], x[2], x[3], x[4])
-                                 for x in value] for key, value in items}
+    def __init__(self, elit_enemy_spawn = 0.1):
+        weapons = list(json.loads(open('data/Weapons.json').read()))
+        self.list_weapons = [Weapon(weapon[0], weapon[1], weapon[2]) for weapon in weapons]
+        
+        items = list(json.loads(open('data/Items.json').read()))
+        self.list_items = [Item(item[0], item[1], item[2], item[3], item[4]) for item in items]
 
         attacks = list(json.loads(open('data/Attacks.json').read()).items())
-        self.dict_attacks = {key: [Attack(x[0], x[1], x[2], x[3], x[4])
-                                   for x in value] for key, value in attacks}
+        self.dict_attacks = {key: [Attack(x[0], x[1], x[2], x[3], x[4]) for x in value] for key, value in attacks}
 
+        self.elit_enemy_spawn = elit_enemy_spawn
         self.map = Map()
         self.player = Player()
         self.player.add_attacks(self.dict_attacks["CHARACTER"] + self.dict_attacks["PLAYER"])
@@ -58,12 +61,11 @@ class Game:
         self.player.set_pos(random_pos)
 
     def spawn_item(self):
-        list_potions = self.dict_items["Potion"]
-        max_luck = reduce(lambda x, y : x + y.drop, list_potions, 0.0)
+        max_luck = reduce(lambda x, y : x + y.drop, self.list_items, 0.0)
 
         drop =  random.uniform(0.0, max_luck)
 
-        for potion in list_potions[::-1]:
+        for potion in self.list_items[::-1]:
             max_luck -= potion.drop
             if drop > max_luck:
                 return potion
@@ -95,12 +97,16 @@ class Game:
         enemies = [Enemy(stat[0], stat[1], True, stat[2]) for stat in list_stat]
         [enemy.add_attacks(self.dict_attacks["CHARACTER"] + self.dict_attacks["ENEMY"]) for enemy in enemies]
 
-        # possible spawn de weapon
+        if (random.uniform(0.0, 1.0) < self.elit_enemy_spawn):
+            enemy_index = random.randint(0, len(enemies) - 1)
+            enemies[enemy_index].set_weapon(self.list_weapons[random.randint(0, len(self.list_weapons) - 1)])
+            enemies[enemy_index].add_attacks(self.dict_attacks[enemies[enemy_index].weapon.name.upper()])
+            enemies[enemy_index].name  = enemies[enemy_index].name + colored_str(" with " + enemies[enemy_index].weapon.name, Color.RED)
         
         return enemies
 
     def item_interaction(self, item):
-        print("Tu as trouvé une " + str(item) + " !")
+        print("Tu as trouvé un(e) " + str(item) + " !")
         result = bool(int(input("Veux tu la ramasser (0) ou non (1) : ")))
 
         if (result):
@@ -152,6 +158,22 @@ class Game:
             print("Le combat commence !\n")
 
         return choice
+
+    def enemy_defeat(self, dead_enemy, enemies):
+        self.player.xp += 10 * dead_enemy.level / self.player.level
+        self.player.level_up()
+        enemies.remove(dead_enemy)
+        if (dead_enemy.weapon and random.uniform(0.0, 1.0) < dead_enemy.weapon.drop):
+            print('\n' + dead_enemy.name + " a laché sa/son " + str(dead_enemy.weapon) + ".")
+            choice = bool(int(input("Veux tu t'en équiper (si tu as déjà une arme, elle sera remplacé) (oui = 1, non = 0) : ")))
+            if choice:
+                if self.player.weapon:
+                    self.player.remove_attacks(self.dict_attacks[self.player.weapon.name.upper()])
+                self.player.set_weapon(dead_enemy.weapon)
+                self.player.add_attacks(self.dict_attacks[self.player.weapon.name.upper()])
+                print("Tu as maintenant " + str(self.player.weapon) + "en ta possession. Fais en bon usage")
+            else:
+                print("Te as raison les " + dead_enemy.weapon.name + " c'est pour les faible!")
     
     def battle_round(self, characters, enemies):
         print("\n===================ROUND===================\n")
@@ -169,15 +191,11 @@ class Game:
                 if escape:
                     return True
                 if target.dead():
-                    self.player.xp += 10 * target.level / self.player.level
-                    self.player.level_up()
-                    enemies.remove(target)
+                    self.enemy_defeat(target, enemies)
             elif character.life > 0.0:
                 character.attack(self.player, character.choose_attack())
                 if character.dead():
-                    self.player.xp += 10 * character.level / self.player.level
-                    self.player.level_up()
-                    enemies.remove(character)
+                    self.enemy_defeat(character, enemies)
 
             if (not enemies):
                 self.map.set_tile_type(self.player.pos)

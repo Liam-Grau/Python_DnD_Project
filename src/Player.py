@@ -157,19 +157,19 @@ class Player(Character):
                     print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Tu ne seras plus soigné.")
                 if (effect[0] == StatType.CRT_MULTI):
                     self.crt_multi -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (multiplicateur critique = " + self.crt_multi + ").")
+                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (multiplicateur critique = " + str(self.crt_multi) + ").")
                 elif (effect[0] == StatType.STRENGTH):
                     self.strength -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (force = " + self.strength + ").")
+                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (force = " + str(self.strength) + ").")
                 elif (effect[0] == StatType.RESISTANCE):
                     self.resistance -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (résistance = " + self.resistance + ").")
+                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (résistance = " + str(self.resistance) + ").")
                 elif (effect[0] == StatType.INITIATIVE):
                     self.initiative -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (initiative = " + self.initiative + ").")
+                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (initiative = " + str(self.initiative) + ").")
                 elif (effect[0] == StatType.DEXTERITY):
                     self.dexterity -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (dextérité = " + self.dexterity + ").")
+                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (dextérité = " + str(self.dexterity) + ").")
 
         self.potion_effect = [effect for effect in self.potion_effect if effect not in expire_effect]
         

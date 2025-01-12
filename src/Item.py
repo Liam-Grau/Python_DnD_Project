@@ -1,4 +1,5 @@
 from enum import Enum
+from src.Color import *
 
 
 class StatType(Enum):

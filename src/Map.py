@@ -148,3 +148,4 @@ class Map:
             pos = [random.randint(0, self.dimension[0] - 1), random.randint(0, self.dimension[1] - 1)]
 
         self.set_tile_type(pos, TileType.TREASURE)
+        self.map[pos[0]][pos[1]].discovered = False

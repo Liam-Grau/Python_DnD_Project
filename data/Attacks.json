@@ -1,7 +1,7 @@
 {
 	"CHARACTER" : [["Punch", 5, 10, 40, 95], ["Kick", 6, 5, 40, 95]],
 	"PLAYER" : [["Escape", -1, 0, 50, 100]],
-	"ENEMY" : [["Bite", 4, 15, 20, 90]],
+	"ENEMY" : [["Laceration", 4, 15, 20, 90]],
 	"SWORD" : [["Slice", 8, 5, 65, 95], ["Pierce", 8, 15, 55, 95]],
 	"SHIELD" : [["Bonk", 6, 2, 70, 97], ["Dash", 7, 2, 70, 96]],
 	"SPEAR" : [["Mid Range Attack", 8, 5, 55, 90], ["Precise Attack", 7, 10, 55, 90]],

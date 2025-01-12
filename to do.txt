@@ -1,7 +1,5 @@
 to do:
 	- Map (add biome for tile with background color generated with markove chains)
-	- Weapon (json file et adapt each function)
-	- Save (3 slots json file !!)
 	- Enemy (json file for all different enemeis for each biom)
 __________________________________________________________________________________________________
 	- Game (add possibility of load specific json to load map)
