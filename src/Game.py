@@ -160,7 +160,7 @@ class Game:
             elif character.life > 0.0:
                 character.attack(self.player, character.choose_attack())
                 if character.dead():
-                    self.player.xp += 10 * target.level / self.player.level
+                    self.player.xp += 10 * character.level / self.player.level
                     self.player.level_up()
                     enemies.remove(character)
 
@@ -200,7 +200,11 @@ class Game:
             sleep(0.3)
         else:
             print_colored("Bravo, tu as trouver le TVA (Trésor Virtuel Abyssal) !", Color.YELLOW)
-            return True
+            self.player.xp += 100
+            self.map.set_tile_type(self.player.pos)
+            self.map.set_treasure_tile(self.player.pos)
+            print(self.map)
+            return not bool(int(input("Tu as maintenant un choix crucial à faire, veux tu teminer ton aventure ici et rentrer chez toi en héro avec le trésor (0) ou bien préfères tu la posser toujours plus loin tes limites et chercher les autres trésors qui se cache dans cette contré (1) : ")))
 
     def game_round(self):
         refresh_map = True
@@ -256,3 +260,8 @@ class Game:
 
         else:
             print_colored("\n... Qui aurait pu s'attendre à une telle mort... Il est encore temps de réessayer !", Color.RED)
+            if bool(int(input("\nVeux tu réessayer (oui = 1): "))):
+                print("\n\n")
+                self.__init__()
+                self.begin_game()
+                self.game_round()

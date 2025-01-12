@@ -23,9 +23,9 @@ class Tile:
             self.discovered = False
 
             num = random.uniform(0.0, 1.0)
-            if (num > self.item_spawn_chance):
+            if (num > item_spawn_chance):
                 self.tile_type = TileType.NONE
-            elif (num > self.mob_spawn_chance):
+            elif (num > mob_spawn_chance):
                 self.tile_type = TileType.ITEM
             else:
                 self.tile_type = TileType.ENEMY

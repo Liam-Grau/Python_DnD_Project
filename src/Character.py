@@ -82,7 +82,7 @@ class Character:
                     test = False
                     
 
-            self.max_life = self.level * (self.resistance + self.initiative) * 0.5
+            self.max_life = self.level * (self.resistance + self.initiative) * 0.5 + 1.0
             self.life = self.max_life
             self.crt_multi = 1 + (self.dexterity + self.strength) * 0.1
 

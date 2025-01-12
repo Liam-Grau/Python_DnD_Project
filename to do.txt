@@ -1,5 +1,4 @@
 to do:
-	- Game (possibiliter de continuer de jouer en cas de victoire ou de recommencer en cas de défaite)
 	- Map (add biome for tile with background color generated with markove chains)
 	- Weapon (json file et adapt each function)
 	- Save (3 slots json file !!)

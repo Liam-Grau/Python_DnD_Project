@@ -7,7 +7,7 @@ class Player(Character):
     def __init__(self, name, level=1, random=True, nb_point=19):
         super(Player, self).__init__(name, level, random, nb_point)
         self.xp = 0
-        self.max_xp = 10
+        self.max_xp = 100
         self.pos = [0, 0]
         self.inventory = []
         self.quantity = []
