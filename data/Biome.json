@@ -1,0 +1,71 @@
+{
+	"NONE" :
+	{
+		"WATER" : 0.5,
+		"SAND" : 1,
+		"GRASSLAND" : 1,
+		"HILL" : 1,
+		"MOUNTAIN" : 1,
+		"VOLCANO" : 0.3
+	},
+
+	"WATER" :
+	{
+		"WATER" : 2,
+		"SAND" : 0.7,
+		"GRASSLAND" : 0.01,
+		"HILL" : 0.001,
+		"MOUNTAIN" : 0.001,
+		"VOLCANO" : 0.0001
+	},
+
+	"SAND" :
+	{
+		"WATER" : 0.5,
+		"SAND" : 1,
+		"GRASSLAND" : 0.8,
+		"HILL" : 0.01,
+		"MOUNTAIN" : 0.001,
+		"VOLCANO" : 0.0001
+	},
+
+	"GRASSLAND" :
+	{
+		"WATER" :  0.01,
+		"SAND" : 0.6,
+		"GRASSLAND" : 1,
+		"HILL" : 0.7,
+		"MOUNTAIN" : 0.01,
+		"VOLCANO" : 0.001
+	},
+
+	"HILL" :
+	{
+		"WATER" : 0.01,
+		"SAND" : 0.01,
+		"GRASSLAND" : 0.8,
+		"HILL" : 1,
+		"MOUNTAIN" : 0.6,
+		"VOLCANO" : 0.01
+	},
+
+	"MOUNTAIN" :
+	{
+		"WATER" : 0.01,
+		"SAND" : 0.001,
+		"GRASSLAND" : 0.01,
+		"HILL" : 0.7,
+		"MOUNTAIN" : 1,
+		"VOLCANO" : 0.3
+	},
+
+	"VOLCANO" :
+	{
+		"WATER" : 0.0001,
+		"SAND" : 0.001,
+		"GRASSLAND" : 0.01,
+		"HILL" : 0.01,
+		"MOUNTAIN" : 0.7,
+		"VOLCANO" : 0.4
+	}
+}

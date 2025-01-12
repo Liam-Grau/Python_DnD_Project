@@ -1,4 +1,5 @@
 import numpy as np
+from functools import reduce
 import random
 from src.Color import *
 import json
@@ -10,11 +11,20 @@ class TileType(Enum):
     ITEM = 2
     TREASURE = 3
 
+class TileBiome(Enum):
+    NONE = "BLACK"
+    WATER = "LIGHT_BLUE"
+    SAND = "YELLOW"
+    GRASSLAND = "LIGHT_GREEN"
+    HILL = "DARK_GREEN"
+    MOUNTAIN = "GRAY"
+    VOLCANO = "RED"
 
 class Tile:
 
-    def __init__(self, tile_type=TileType.NONE, discovered=False):
+    def __init__(self, tile_type=TileType.NONE, biome=TileBiome.NONE, discovered=False):
         self.tile_type = tile_type
+        self.biome = biome
         self.discovered = discovered
         self.player = False
 
@@ -44,6 +54,7 @@ class Map:
             return Tile(TileType.ENEMY)
 
     def __init__(self, dimension=[10, 10], mob_spawn_chance=0.45, item_spawn_chance=0.65, nothing_spawn_chance=1.0):
+        self.markov_chain = dict(json.loads(open('data/Biome.json').read()))
         self.dimension = dimension
         self.mob_spawn_chance = mob_spawn_chance
         self.item_spawn_chance = item_spawn_chance
@@ -53,9 +64,32 @@ class Map:
 
         self.discovered_tiles = set()
 
+    def initialize_biome(self, tile, pos):
+        around_tile = [self.map[self.dimension[0] - 1 if pos[0] - 1 < 0 else pos[0] - 1][self.dimension[1] - 1 if pos[1] - 1 < 0 else pos[1] - 1],
+                       self.map[self.dimension[0] - 1 if pos[0] - 1 < 0 else pos[0] - 1][pos[1]],
+                       self.map[self.dimension[0] - 1 if pos[0] - 1 < 0 else pos[0] - 1][(pos[1] + 1) % self.dimension[1]],
+                       self.map[pos[0]][self.dimension[1] - 1 if pos[1] - 1 < 0 else pos[1] - 1],
+                       self.map[pos[0]][(pos[1] + 1) % self.dimension[1]],
+                       self.map[(pos[0] + 1) % self.dimension[0]][self.dimension[1] - 1 if pos[1] - 1 < 0 else pos[1] - 1],
+                       self.map[(pos[0] + 1) % self.dimension[0]][pos[1]],
+                       self.map[(pos[0] + 1) % self.dimension[0]][(pos[1] + 1) % self.dimension[1]]]
+        
+        average_markov_chain = {biome.name: reduce(lambda x, tile: x + self.markov_chain[tile.biome.name][biome.name], around_tile, 0) for biome in TileBiome if biome != TileBiome.NONE}
+        average_markov_chain = {biome: value / 8 for biome, value in average_markov_chain.items()}
+        
+        max_roll_result = reduce(lambda x, y: x + y, average_markov_chain.values(), 0)
+        roll = random.uniform(0.0, max_roll_result)
+
+        for key in average_markov_chain.keys():
+            max_roll_result -= average_markov_chain[key]
+            if (roll > max_roll_result):
+                tile.biome = TileBiome[key]
+                return
+    
     def initialize_map(self):
          random_map = np.random.uniform(low=0.0, high=self.mob_spawn_chance + self.item_spawn_chance + self.nothing_spawn_chance, size=(self.dimension[0], self.dimension[1]))
          self.map = list(map(lambda row: list(map(self.choose_tile_tipe, row)), random_map))
+         [[self.initialize_biome(self.map[r][c], [r, c]) for c in range(self.dimension[1])] for r in range(self.dimension[0])]
 
     def s_width(self, width):
 
@@ -120,16 +154,16 @@ class Map:
         for row in self.map:
             for tile in row:
                 if tile.player:
-                    result += ' ' + colored_str("\u263A", Color.PURPLE)
+                    result += colored_str(f"{BackgroundColor[tile.biome.value].value}\u263A", Color.PURPLE)
                 elif not tile.discovered:
-                    result += ' ' + u"\u25A1"
+                    result += f"{BackgroundColor[tile.biome.value].value}" + u"\u25A1" + f"{Color.RESET.value}"
                 else:
                     if (tile.tile_type == TileType.NONE):
-                        result += colored_str(' 0')
+                        result += colored_str(f'{BackgroundColor[tile.biome.value].value}0')
                     elif (tile.tile_type == TileType.ITEM):
-                        result += colored_str(' I', Color.GREEN)
+                        result += colored_str(f'{BackgroundColor[tile.biome.value].value}I', Color.DARK_BLUE)
                     else:
-                        result += colored_str(' M', Color.RED)
+                        result += colored_str(f'{BackgroundColor[tile.biome.value].value}M', Color.BLACK)
 
             result += '\n'
 

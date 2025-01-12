@@ -26,9 +26,6 @@ def set_up(modules):
     return imported_modules
 
 
-#from src.Game import *
-
-
 def main():
     GameModule = importlib.import_module("src.Game")
     g = GameModule.Game()

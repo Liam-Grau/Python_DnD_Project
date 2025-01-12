@@ -236,7 +236,7 @@ class Game:
             self.player.xp += 100
             self.map.set_tile_type(self.player.pos)
             self.map.set_treasure_tile(self.player.pos)
-            return not bool(int(input("Tu as maintenant un choix crucial à faire, veux tu teminer ton aventure ici et rentrer chez toi en héro avec le trésor (0) ou bien préfères tu la posser toujours plus loin tes limites et chercher les autres trésors qui se cache dans cette contré (1) : ")))
+            return not bool(int(input("Tu as maintenant un choix crucial à faire, veux tu teminer ton aventure ici et rentrer chez toi en héro avec le trésor (0) ou bien préfères tu pousser toujours plus loin tes limites et chercher les autres trésors qui se cache dans cette contrée (1) : ")))
 
     def game_round(self):
         refresh_map = True

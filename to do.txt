@@ -1,5 +1,5 @@
 to do:
-	- Map (add biome for tile with background color generated with markove chains)
+	- bug (déplacement sur grille rectangulaire)
 	- Enemy (json file for all different enemeis for each biom)
 __________________________________________________________________________________________________
 	- Game (add possibility of load specific json to load map)
