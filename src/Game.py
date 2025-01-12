@@ -62,7 +62,6 @@ class Game:
 
         if self.is_game_save_loaded == False :
             self.map.initialize_map()
-            
             self.player.add_attacks(self.dict_attacks["CHARACTER"] + self.dict_attacks["PLAYER"])
 
     def save_game(self):
@@ -174,7 +173,7 @@ class Game:
                     print("\nEchec ! Le combat commence !\n")
                     choice = False
                 elif roll > 50:
-                    enemies[0].attack(enemies[0].choose_attack(self.dict_attacks["ENEMY"][1]), self.player)
+                    enemies[0].attack(enemies[0].choose_attack(), self.player)
                     if self.player.life > 0.0:
                         print("\nRéussite ! Malgré l'attaque sournoise tu arrive à t'enfuire.\n")
                 else:

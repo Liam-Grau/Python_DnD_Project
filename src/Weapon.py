@@ -11,3 +11,7 @@ class Weapon:
 
     def __repr__(self):
         return self.__str__
+
+    @property
+    def __dict__(self):
+        return {"name": self.name, "damage": self.damage, "drop": self.drop}

@@ -32,3 +32,15 @@ class Item:
     @property
     def __dict__(self):
         return {"name": self.name, "stat": self.stat.name, "efficiency": self.efficiency, "duration": self.duration, "drop": self.drop}
+
+
+class PotionEffect:
+    def __init__(self, stat=StatType.LIFE, duration=2.0, efficiency=1.0, name="HEAL"):
+        self.stat = stat
+        self.duration = duration
+        self.efficiency = efficiency
+        self.name = name
+
+    @property
+    def __dict__(self):
+        return [self.stat.name, self.duration, self.efficiency, self.name]

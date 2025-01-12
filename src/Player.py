@@ -2,9 +2,6 @@ from src.Character import *
 from src.Item import *
 from src.DialogueEngine import *
 
-def save_potion_effect(effect):
-    return [effect[0].name, effect[1], effect[2], effect[3]]
-
 class Player(Character):
 
     def __init__(self, name="?????", level=1, random=False, nb_point=19):
@@ -18,14 +15,19 @@ class Player(Character):
 
     def save(self):
         saved_player = vars(self)
+
         inventory = list(map(lambda item: item.__dict__, saved_player["inventory"]))
         saved_player["inventory"] = inventory
-        #weapons = list(map(lambda tile: tile.__dict__, saved_player["weapons"]))
-        #saved_player["weapons"] = weapons
-        potion_effect = list(map(lambda effect: save_potion_effect, saved_player["potion_effect"]))
+
+        if self.weapon != None:
+            saved_player["weapon"] = self.weapon.__dict__
+
+        potion_effect = list(map(lambda effect: effect.__dict__, saved_player["potion_effect"]))
         saved_player["potion_effect"] = potion_effect
+
         attacks = list(map(lambda attack: attack.__dict__, saved_player["attacks"]))
         saved_player["attacks"] = attacks
+
         with open("data/saved_player.json", "w") as file:
             json.dump(saved_player, file, indent = 4)
 
@@ -50,18 +52,19 @@ class Player(Character):
                 self.inventory.append(Item(item["name"], StatType[item["stat"]], item["efficiency"], item["duration"], item["drop"]))
 
             for i in range(len(saved_player["potion_effect"])):
-                effect = [StatType[effect[i][0]], effect[i][1], effect[i][2], effect[i][3]]
-                self.potion_effect.append(effect)
+                effect = saved_player["potion_effect"][i]
+                self.potion_effect.append(PotionEffect(StatType[effect[0]] , effect[1], effect[2], effect[3]))
 
             for i in range(len(saved_player["attacks"])):
                 attack = saved_player["attacks"][i]
                 self.attacks.append(Attack(attack["name"], attack["damage"], attack["crt"], attack["success"], attack["failure"]))
 
+            if saved_player["weapon"] != None:
+                self.weapon = Weapon(saved_player["weapon"]["name"], saved_player["weapon"]["damages"], saved_player["weapon"]["drop"])
        
             self.name = saved_player.get("name")
             self.level = saved_player.get("level", 1)
             self.nb_point = saved_player.get("nb_point", 19)
-            self.weapon = saved_player.get("weapon", None)
             print("Joueur chargé avec succès !")
         except FileNotFoundError:
             print("Aucune sauvegarde trouvée.")
@@ -173,7 +176,7 @@ class Player(Character):
             
         print(potion.name + " Potion utilisée.")
 
-        self.potion_effect += [[potion.stat, potion.duration, potion.efficiency, potion.name]]
+        self.potion_effect += [PotionEffect(potion.stat, potion.duration, potion.efficiency, potion.name)]
 
         if (potion.stat == StatType.LIFE):
             self.life = min(self.max_life, self.life + potion.efficiency)
@@ -201,31 +204,31 @@ class Player(Character):
         expire_effect = []
         
         for effect in self.potion_effect:
-            effect[1] -= 1
+            effect.duration -= 1
             
-            if effect[0] == StatType.LIFE and effect[1] > 0:
-                self.life = min(self.max_life, self.life + effect[2])
-                print("Tu as été soigné de " + str(effect[2]) + " pv.")
+            if effect.stat == StatType.LIFE and effect.duration > 0:
+                self.life = min(self.max_life, self.life + effect.efficiency)
+                print("Tu as été soigné de " + str(effect.efficiency) + " pv.")
 
-            if (effect[1] == 0):
+            if (effect.duration == 0):
                 expire_effect += [effect]
-                if (effect[0] == StatType.LIFE):
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Tu ne seras plus soigné.")
-                if (effect[0] == StatType.CRT_MULTI):
-                    self.crt_multi -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (multiplicateur critique = " + str(self.crt_multi) + ").")
-                elif (effect[0] == StatType.STRENGTH):
-                    self.strength -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (force = " + str(self.strength) + ").")
-                elif (effect[0] == StatType.RESISTANCE):
-                    self.resistance -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (résistance = " + str(self.resistance) + ").")
-                elif (effect[0] == StatType.INITIATIVE):
-                    self.initiative -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (initiative = " + str(self.initiative) + ").")
-                elif (effect[0] == StatType.DEXTERITY):
-                    self.dexterity -= effect[2]
-                    print("L'effet de ta " + effect[3] + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (dextérité = " + str(self.dexterity) + ").")
+                if (effect.stat == StatType.LIFE):
+                    print("L'effet de ta " + effect.name+ " Potion vient d'expirer. Tu ne seras plus soigné.")
+                if (effect.stat == StatType.CRT_MULTI):
+                    self.crt_multi -= effect.efficiency
+                    print("L'effet de ta " + effect.name + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (multiplicateur critique = " + str(self.crt_multi) + ").")
+                elif (effect.stat == StatType.STRENGTH):
+                    self.strength -= effect.efficiency
+                    print("L'effet de ta " + effect.name + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (force = " + str(self.strength) + ").")
+                elif (effect.stat == StatType.RESISTANCE):
+                    self.resistance -= effect.efficiency
+                    print("L'effet de ta " + effect.name + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (résistance = " + str(self.resistance) + ").")
+                elif (effect.stat == StatType.INITIATIVE):
+                    self.initiative -= effect.efficiency
+                    print("L'effet de ta " + effect.name + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (initiative = " + str(self.initiative) + ").")
+                elif (effect.stat == StatType.DEXTERITY):
+                    self.dexterity -= effect.efficiency
+                    print("L'effet de ta " + effect.name + " Potion vient d'expirer. Ta statistique revient à sa valeur initial (dextérité = " + str(self.dexterity) + ").")
 
         self.potion_effect = [effect for effect in self.potion_effect if effect not in expire_effect]
         

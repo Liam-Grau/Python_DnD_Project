@@ -44,7 +44,7 @@ class Tile:
     
     @property
     def __dict__(self):
-        return {"tile_type": self.tile_type.name, "discovered": self.discovered, "player": self.player}
+        return {"tile_type": self.tile_type.name, "biome" : self.biome.name, "discovered": self.discovered, "player": self.player}
 
 
 class Map:
@@ -91,15 +91,14 @@ class Map:
             for i in range(self.dimension[0]): 
                 for j in range(self.dimension[1]): 
                     tile = saved_map["map"][i][j]
-                    t_type = TileType[tile["tile_type"]]
-                    new_map[i][j] = Tile(t_type, tile["discovered"], tile["player"])
+                    new_map[i][j] = Tile(TileType[tile["tile_type"]], TileBiome[tile["biome"]], tile["discovered"], tile["player"])
 
             self.map = new_map
 
             discovered_tiles = set()
             for i in range(len(saved_map["discovered_tiles"])):
                 tile = saved_map["discovered_tiles"][i]
-                discovered_tiles.add(Tile(TileType[tile["tile_type"]], tile["discovered"], tile["player"]))
+                discovered_tiles.add(Tile(TileType[tile["tile_type"]], TileBiome[tile["biome"]], tile["discovered"], tile["player"]))
 
             self.discovered_tiles = discovered_tiles
         except FileNotFoundError:

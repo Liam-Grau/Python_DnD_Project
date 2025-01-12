@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from turtle import st
 from src.Attack import *
 from src.Color import *
+from src.Weapon import *
 
 
 class Character:
