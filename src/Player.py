@@ -2,6 +2,9 @@ from src.Character import *
 from src.Item import *
 from src.DialogueEngine import *
 
+def save_potion_effect(effect):
+    return [effect[0].name, effect[1], effect[2], effect[3]]
+
 class Player(Character):
 
     def __init__(self, name="?????", level=1, random=False, nb_point=19):
@@ -12,6 +15,59 @@ class Player(Character):
         self.inventory = []
         self.quantity = []
         self.potion_effect = []
+
+    def save(self):
+        saved_player = vars(self)
+        inventory = list(map(lambda item: item.__dict__, saved_player["inventory"]))
+        saved_player["inventory"] = inventory
+        #weapons = list(map(lambda tile: tile.__dict__, saved_player["weapons"]))
+        #saved_player["weapons"] = weapons
+        potion_effect = list(map(lambda effect: save_potion_effect, saved_player["potion_effect"]))
+        saved_player["potion_effect"] = potion_effect
+        attacks = list(map(lambda attack: attack.__dict__, saved_player["attacks"]))
+        saved_player["attacks"] = attacks
+        with open("data/saved_player.json", "w") as file:
+            json.dump(saved_player, file, indent = 4)
+
+    def get_saved_player(self):
+        try:
+            with open("data/saved_player.json", "r") as file:
+                saved_player = json.load(file)
+            self.xp = saved_player.get("xp", 0)
+            self.max_xp = saved_player.get("max_xp", 100)
+            self.pos = saved_player.get("pos", [0, 0])
+            self.quantity = saved_player.get("quantity", [])
+            self.life = saved_player.get("life", 1)
+            self.max_life = saved_player.get("max_life", 1)
+            self.crt_multi = saved_player.get("crt_multi", 1)
+            self.strength = saved_player.get("strenght", 0)
+            self.resistance = saved_player.get("resistance", 0)
+            self.initiative = saved_player.get("initiative", 0)
+            self.dexterity = saved_player.get("dexterity", 0)
+
+            for i in range(len(saved_player["inventory"])): 
+                item = saved_player["inventory"][i]
+                self.inventory.append(Item(item["name"], StatType[item["stat"]], item["efficiency"], item["duration"], item["drop"]))
+
+            for i in range(len(saved_player["potion_effect"])):
+                effect = [StatType[effect[i][0]], effect[i][1], effect[i][2], effect[i][3]]
+                self.potion_effect.append(effect)
+
+            for i in range(len(saved_player["attacks"])):
+                attack = saved_player["attacks"][i]
+                self.attacks.append(Attack(attack["name"], attack["damage"], attack["crt"], attack["success"], attack["failure"]))
+
+       
+            self.name = saved_player.get("name")
+            self.level = saved_player.get("level", 1)
+            self.nb_point = saved_player.get("nb_point", 19)
+            self.weapon = saved_player.get("weapon", None)
+            print("Joueur chargé avec succès !")
+        except FileNotFoundError:
+            print("Aucune sauvegarde trouvée.")
+
+    def delete_save(self):
+        os.remove("data/saved_player.json")
 
     def choose_target(self, opponents):
         print("\nQuel monstre veux tu attaquer :")

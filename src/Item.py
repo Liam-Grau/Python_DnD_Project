@@ -28,3 +28,7 @@ class Item:
 
     def __repr(self):
         return self.__str__()
+
+    @property
+    def __dict__(self):
+        return {"name": self.name, "stat": self.stat.name, "efficiency": self.efficiency, "duration": self.duration, "drop": self.drop}

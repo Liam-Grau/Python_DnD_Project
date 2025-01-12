@@ -1,0 +1,298 @@
+{
+    "dimension": [
+        5,
+        10
+    ],
+    "mob_spawn_chance": 0.45,
+    "item_spawn_chance": 0.65,
+    "nothing_spawn_chance": 1.0,
+    "map": [
+        [
+            {
+                "tile_type": "NONE",
+                "discovered": true,
+                "player": false
+            },
+            {
+                "tile_type": "ITEM",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ENEMY",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ITEM",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            }
+        ],
+        [
+            {
+                "tile_type": "NONE",
+                "discovered": true,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ITEM",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": true,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ENEMY",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ENEMY",
+                "discovered": false,
+                "player": false
+            }
+        ],
+        [
+            {
+                "tile_type": "NONE",
+                "discovered": true,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "TREASURE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ITEM",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ITEM",
+                "discovered": false,
+                "player": false
+            }
+        ],
+        [
+            {
+                "tile_type": "NONE",
+                "discovered": true,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ENEMY",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ITEM",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            }
+        ],
+        [
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ENEMY",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ENEMY",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "ITEM",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            },
+            {
+                "tile_type": "NONE",
+                "discovered": false,
+                "player": false
+            }
+        ]
+    ],
+    "discovered_tiles": [
+        {
+            "tile_type": "NONE",
+            "discovered": true,
+            "player": false
+        },
+        {
+            "tile_type": "NONE",
+            "discovered": true,
+            "player": false
+        },
+        {
+            "tile_type": "NONE",
+            "discovered": true,
+            "player": false
+        },
+        {
+            "tile_type": "NONE",
+            "discovered": true,
+            "player": false
+        },
+        {
+            "tile_type": "NONE",
+            "discovered": true,
+            "player": false
+        }
+    ]
+}

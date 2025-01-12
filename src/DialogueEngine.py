@@ -182,6 +182,7 @@ class DialogueEngine:
                 # Call function
                 return result_data
             except ValueError:
+                is_valid = False
                 self.__clear_last_line()
                 continue
 

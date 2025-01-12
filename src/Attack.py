@@ -11,4 +11,8 @@ class Attack:
 
     def __repr__(self):
         return "Attack: " + self.__str__()
+
+    @property
+    def __dict__(self):
+        return {"name": self.name, "damage": self.damage, "crt": self.crt, "success": self.success, "failure": self.failure}
         

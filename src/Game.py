@@ -8,6 +8,7 @@ import keyboard as kb
 from time import sleep
 from functools import reduce
 import sys
+import os
 from src.DialogueEngine import *
 
 
@@ -26,9 +27,9 @@ class Game:
         self.elit_enemy_spawn = elit_enemy_spawn
         self.map = Map()
         self.player = Player()
-        self.player.add_attacks(self.dict_attacks["CHARACTER"] + self.dict_attacks["PLAYER"])
 
         self.end = False
+        self.is_game_save_loaded = False
 
         self.dialogue_engine = DialogueEngine()
         self.dialogue_engine.load_dialogues("data/Introduction_Dialogue.json")
@@ -45,15 +46,39 @@ class Game:
 		  "s_dexterity" : self.player.s_dexterity,
 		  "start" : self.dialogue_engine.start,
 		  "leave" : self.leave,
-		  "continue_dialogue" : self.player.continue_dialogue
+		  "continue_dialogue" : self.player.continue_dialogue,
+          "launch_save" : self.launch_save,
+          "start_intro_dialogue" : self.start_intro_dialogue
         }
 
         self.dialogue_engine.set_mapped_functions(funcs)
-        self.dialogue_engine.start_new_dialogue("presentation_dialogue", self.player, Character("Maitre du jeu"))
+        if os.path.exists("data/saved_player.json") and os.path.exists("data/saved_map.json"):
+            self.dialogue_engine.start_new_dialogue("save_dialogue", self.player, Character("Maitre du jeu"))
+        else:
+            self.dialogue_engine.start_new_dialogue("presentation_dialogue", self.player, Character("Maitre du jeu"))
+        
 
-        self.map.initialize_map()
+        if self.is_game_save_loaded == False :
+            self.map.initialize_map()
+            
+            self.player.add_attacks(self.dict_attacks["CHARACTER"] + self.dict_attacks["PLAYER"])
+
+    def save_game(self):
+        self.map.save()
+        self.player.save()
+
+    def get_saved_game(self):
+        self.map.get_saved_map()
+        self.player.get_saved_player()
+
+    def delete_save(self):
+        self.map.delete_save()
+        self.player.delete_save()
 
     def begin_game(self):
+        if self.is_game_save_loaded == True :
+            return 
+
         random_pos = [random.randint(0, self.map.dimension[0] - 1), random.randint(0, self.map.dimension[1] - 1)]
         self.map.set_treasure_tile(random_pos)
         self.map.set_tile_type(random_pos)
@@ -278,12 +303,13 @@ class Game:
                 elif (key.lower() == 's'):
                     self.player.pos[0] += 1
 
-                    if (self.player.pos[0] > self.map.dimension[0] - 1):
+                    if (self.player.pos[0] > self.map.dimension[1] - 1):
                         self.player.pos[0] = 0
 
                 self.end = self.check_tile()
 
             elif (key.lower() == 'q'):
+                self.save_game()
                 self.end = True
         
         if key == 0:
@@ -306,5 +332,13 @@ class Game:
 
     # Simple function callback
     def leave(self, dialogue_engine, result):
-        self.dialogue_engine.start_dialogue("stop_dialogue")
         self.end = True
+        self.dialogue_engine.start_dialogue("stop_dialogue")
+
+    def launch_save(self, dialogue_engine, result):
+        self.get_saved_game()
+        self.is_game_save_loaded = True
+        self.dialogue_engine.start_dialogue("final_dialogue")
+
+    def start_intro_dialogue(self, dialogue_engine, result):
+        self.dialogue_engine.start_dialogue("presentation_dialogue")

@@ -1,0 +1,63 @@
+{
+    "name": "\u001b[32mAntoine\u001b[0m",
+    "level": 1,
+    "nb_point": 0,
+    "max_life": 7.0,
+    "life": 7.0,
+    "crt_multi": 1.8,
+    "strength": 5,
+    "resistance": 5,
+    "initiative": 7,
+    "dexterity": 3,
+    "weapon": null,
+    "attacks": [
+        {
+            "name": "Punch",
+            "damage": 5,
+            "crt": 10,
+            "success": 40,
+            "failure": 95
+        },
+        {
+            "name": "Kick",
+            "damage": 6,
+            "crt": 5,
+            "success": 40,
+            "failure": 95
+        },
+        {
+            "name": "Escape",
+            "damage": -1,
+            "crt": 0,
+            "success": 50,
+            "failure": 100
+        }
+    ],
+    "xp": 0,
+    "max_xp": 100,
+    "pos": [
+        4,
+        0
+    ],
+    "inventory": [
+        {
+            "name": "Dexterity",
+            "stat": "DEXTERITY",
+            "efficiency": 5,
+            "duration": 4,
+            "drop": 3
+        },
+        {
+            "name": "Heal",
+            "stat": "LIFE",
+            "efficiency": 3,
+            "duration": 3,
+            "drop": 15
+        }
+    ],
+    "quantity": [
+        2,
+        1
+    ],
+    "potion_effect": []
+}

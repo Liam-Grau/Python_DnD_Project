@@ -1,5 +1,37 @@
 [
   {
+    "dialogue_name": "save_dialogue",
+    "dialogue_lines": [
+      {
+        "line": "Il semblerait que tu n'es pas nouveau...",
+        "time": 1.0,
+        "answers": []
+      },
+      {
+        "line": "J'ai trouve une ancienne aventure a ton nom...",
+        "time": 1.0,
+        "answers": []
+      },
+      {
+        "line": "Souhaites tu repartir de ce monde ?",
+        "time": 1.0,
+        "answers": [
+          {
+            "type": 1
+          },
+          {
+            "answer": "C'est avec plaisir que je vais retourner braver les danger de ce monde !",
+            "function": "launch_save"
+          },
+          {
+            "answer": "Une nouvelle aventure me sied mieux.",
+            "function": "start_intro_dialogue"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "dialogue_name": "presentation_dialogue",
     "dialogue_lines": [
       {

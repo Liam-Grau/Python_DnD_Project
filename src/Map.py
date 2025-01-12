@@ -22,11 +22,11 @@ class TileBiome(Enum):
 
 class Tile:
 
-    def __init__(self, tile_type=TileType.NONE, biome=TileBiome.NONE, discovered=False):
+    def __init__(self, tile_type=TileType.NONE, biome=TileBiome.NONE, discovered=False, player = False):
         self.tile_type = tile_type
         self.biome = biome
         self.discovered = discovered
-        self.player = False
+        self.player = player
 
     def update(self, mob_spawn_chance, item_spawn_chance):
         if (self.discovered and self.tile_type == TileType.NONE and np.random.uniform(low=0.0, high=1.0, size=1) < 0.1):
@@ -41,6 +41,10 @@ class Tile:
                 self.tile_type = TileType.ENEMY
 
         return not self.discovered
+    
+    @property
+    def __dict__(self):
+        return {"tile_type": self.tile_type.name, "discovered": self.discovered, "player": self.player}
 
 
 class Map:
@@ -63,6 +67,46 @@ class Map:
         self.map = []
 
         self.discovered_tiles = set()
+
+    def save(self):
+        saved_map = vars(self)
+        tiles = list(map(lambda row : list(map(lambda tile : tile.__dict__, row)), saved_map["map"]))
+        saved_map["map"] = tiles
+        discovered_tiles = list(map(lambda tile: tile.__dict__, saved_map["discovered_tiles"]))
+        saved_map["discovered_tiles"] = discovered_tiles
+        with open("data/saved_map.json", "w") as file:
+            json.dump(saved_map, file, indent = 4)
+
+    def get_saved_map(self):
+        try:
+            with open("data/saved_map.json", "r") as file:
+                saved_map = json.load(file)
+            self.dimension = saved_map.get("dimension", [10, 10])
+            self.mob_spawn_chance = saved_map.get("mob_spawn_chance", 0.45)
+            self.item_spawn_chance = saved_map.get("item_spawn_chance", 0.65)
+            self.nothing_spawn_chance = saved_map.get("nothing_spawn_chance", 1)
+            
+            new_map = np.empty((self.dimension[0], self.dimension[1]), dtype = Tile)
+
+            for i in range(self.dimension[0]): 
+                for j in range(self.dimension[1]): 
+                    tile = saved_map["map"][i][j]
+                    t_type = TileType[tile["tile_type"]]
+                    new_map[i][j] = Tile(t_type, tile["discovered"], tile["player"])
+
+            self.map = new_map
+
+            discovered_tiles = set()
+            for i in range(len(saved_map["discovered_tiles"])):
+                tile = saved_map["discovered_tiles"][i]
+                discovered_tiles.add(Tile(TileType[tile["tile_type"]], tile["discovered"], tile["player"]))
+
+            self.discovered_tiles = discovered_tiles
+        except FileNotFoundError:
+            raise
+
+    def delete_save(self):
+        os.remove("data/saved_map.json")
 
     def initialize_biome(self, tile, pos):
         around_tile = [self.map[self.dimension[0] - 1 if pos[0] - 1 < 0 else pos[0] - 1][self.dimension[1] - 1 if pos[1] - 1 < 0 else pos[1] - 1],
