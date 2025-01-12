@@ -1,0 +1,8 @@
+{
+	"WATER" : ["Slime d'eau", "Noye", "Sirene", "Kraken"],
+	"SAND" : ["Slime de sable", "Scarabe geant", "Momie", "Pharaon"],
+	"GRASSLAND" : ["Slime d'herbe", "Monton enrage", "Taureau", "Lapin tueur"],
+	"HILL" : ["Slime", "Gobelin", "Ogre", "Geant"],
+	"MOUNTAIN" : ["Slime de roche", "Troll", "Wyvern", "Golem"],
+	"VOLCANO" : ["Slime de magma", "Flamme ensorcele", "Elémentaire de feu", "Dragon"]
+}

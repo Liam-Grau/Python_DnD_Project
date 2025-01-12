@@ -24,6 +24,8 @@ class Game:
         attacks = list(json.loads(open('data/Attacks.json').read()).items())
         self.dict_attacks = {key: [Attack(x[0], x[1], x[2], x[3], x[4]) for x in value] for key, value in attacks}
 
+        self.enemy_name = dict(json.loads(open('data/Enemies.json').read()).items())
+
         self.elit_enemy_spawn = elit_enemy_spawn
         self.map = Map()
         self.player = Player()
@@ -102,14 +104,15 @@ class Game:
         return random.randint(max(1, mid_lvl - 2), mid_lvl + 2)
 
     def generate_enemy_name(self, lvl, index):
+        print(self.map.map[self.player.pos[0]][self.player.pos[1]].biome.name)
         if (lvl > 15):
-            return colored_str("Géant " + str(index + 1), Color.RED)
+            return colored_str(self.enemy_name[self.map.map[self.player.pos[0]][self.player.pos[1]].biome.name][3] + ' ' + str(index + 1), Color.RED)
         elif (lvl > 10):
-            return colored_str("Ogre " + str(index + 1), Color.RED)
+            return colored_str(self.enemy_name[self.map.map[self.player.pos[0]][self.player.pos[1]].biome.name][2] + ' ' + str(index + 1), Color.RED)
         elif (lvl >5):
-            return colored_str("Gobelin " + str(index + 1), Color.RED)
+            return colored_str(self.enemy_name[self.map.map[self.player.pos[0]][self.player.pos[1]].biome.name][1] + ' ' + str(index + 1), Color.RED)
         else:
-            return colored_str("Slime " + str(index + 1), Color.RED)
+            return colored_str(self.enemy_name[self.map.map[self.player.pos[0]][self.player.pos[1]].biome.name][0] + ' ' + str(index + 1), Color.RED)
 
     def generate_enemy(self, nb_enemy, index):
         result = self.generate_enemy_level(nb_enemy)
